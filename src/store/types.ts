@@ -22,4 +22,5 @@ export type TMenuItem = {
   name: string;
   description: string;
   logo: string;
+  imageLink?: string;
 };

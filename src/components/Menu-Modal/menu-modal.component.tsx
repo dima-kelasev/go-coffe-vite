@@ -1,8 +1,7 @@
 import { Modal, notification, Typography, Button } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-
 import { useRecoilState } from 'recoil';
 import { modalState } from '../../store/modal-state';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 import {
   CustomBtn,
   MenuDescription,
@@ -13,9 +12,10 @@ import {
   OrderSummary,
 } from './menu-modal.styeld';
 import { useState } from 'react';
-
+import CoffeeIcon from '../../assets/img/coffee-icon.png';
 import { ORDER_MODAL } from '../../common/conts/modal-key.const';
-import type { TMenu } from '../../common/types/shop-item.type';
+import { useMenu } from '../../hooks/useMenu';
+import type { TMenuItem } from '../../store/types';
 
 const { Title, Text } = Typography;
 
@@ -24,9 +24,11 @@ export const MenuModal = () => {
   const { isOpen, cafeInfo } = modalProps;
   const [api, contextHolder] = notification.useNotification();
 
-  const [cart, setCart] = useState<TMenu[]>([]);
+  const placeID = cafeInfo?.id;
+  const { menu } = useMenu(placeID ?? undefined);
+  const [cart, setCart] = useState<TMenuItem[]>([]);
 
-  const isInCart = (product: TMenu) => {
+  const isInCart = (product: TMenuItem) => {
     return cart.some((item) => item.id === product.id);
   };
 
@@ -35,19 +37,18 @@ export const MenuModal = () => {
     setCart([]);
   };
 
-  const handleAddToCart = (product: TMenu) => {
+  const handleAddToCart = (product: TMenuItem) => {
     setCart((prev) => [...prev, product]);
   };
 
-  const handleRemoveFromCart = (product: TMenu) => {
+  const handleRemoveFromCart = (product: TMenuItem) => {
     setCart((prev) => prev.filter((item) => item.id !== product.id));
   };
 
   const handlePlaceOrder = () => {
     if (cart.length === 0) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const order = cart.map(({ imageLink, id, ...rest }) => ({
+    const order = cart.map(({ id, ...rest }) => ({
       ...rest,
       cafeName: cafeInfo?.name,
       cafeId: cafeInfo?.id,
@@ -91,20 +92,20 @@ export const MenuModal = () => {
         </MenuTitle>
 
         <MenuItemsContainer>
-          {cafeInfo?.menu.map((item) => {
+          {menu.map((item) => {
             const inCart = isInCart(item);
 
             return (
               <MenuItem key={item.id}>
                 <img
-                  src={item.imageLink}
-                  alt={item.nameProduct}
+                  src={item.imageLink ?? CoffeeIcon}
+                  alt={item.description}
                   width={50}
                   height={50}
                 />
                 <MenuDescription>
-                  <Title level={5}>{item.nameProduct}</Title>
-                  <Text type="secondary">{`${item.size} мл`}</Text>
+                  <Title level={5}>{item.name}</Title>
+                  <Text type="secondary">{`${250} мл`}</Text>
                 </MenuDescription>
 
                 {inCart ? (

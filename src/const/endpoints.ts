@@ -1,7 +1,7 @@
 export const ENDPOINTS = {
-  createCafe: '/places/',
+  createCafe: '/api/places/',
   getPlaces: '/api/places/',
-  createMenu: (placeID: number | string) => `/places/${placeID}/menus`,
-  getMenu: (placeID: number | string) => `/places/${placeID}/menus`,
-  purchase: '/billing/purchase',
+  createMenu: (placeID: number | string) => `/api/places/${placeID}/menus`,
+  getMenu: (placeID: number | string) => `/api/places/${placeID}/menus`,
+  purchase: '/api/billing/purchase',
 };

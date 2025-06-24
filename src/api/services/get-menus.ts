@@ -1,10 +1,16 @@
-import api from '..';
 import { ENDPOINTS } from '../../const/endpoints';
 
 export const fetchMenu = async (placeID: number | string) => {
   try {
-    const response = await api.get(ENDPOINTS.getMenu(placeID));
-    return response.data;
+    const response = await fetch(ENDPOINTS.getMenu(placeID), {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}`);
+    }
+
+    return await response.json();
   } catch (error) {
     console.error('Ошибка загрузки меню:', error);
     throw error;

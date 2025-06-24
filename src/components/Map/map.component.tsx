@@ -8,17 +8,16 @@ import { spinStyle } from '../../common/conts/spin-style';
 import { useEffect, useState } from 'react';
 import { usePlaces } from '../../hooks/usePlaces';
 import { ShopSnackBar } from '../ShopSnackBar/shop-snack-bar.component';
-import type { TShopItem } from '../../common/types/shop-item.type';
-// import { getUserLocation } from '../../common/helpers/get-location.helper';
+import type { TPlaces } from '../../store/types';
 
 export const YandexMap = () => {
   const setOpenModal = useSetRecoilState(modalState);
   const location = useRecoilValue(mapStore);
   const setLocation = useSetRecoilState(mapStore);
   const { places } = usePlaces();
-  const [selectedShop, setSelectedShop] = useState<TShopItem | null>(null);
+  const [selectedShop, setSelectedShop] = useState<TPlaces | null>(null);
 
-  const handleShopSelect = (shop: TShopItem) => {
+  const handleShopSelect = (shop: TPlaces) => {
     setSelectedShop(shop);
   };
 
@@ -28,11 +27,10 @@ export const YandexMap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOpenModal = (shop: TShopItem) => {
+  const handleOpenModal = (shop: TPlaces) => {
     const cafeInfo = {
       name: shop.name,
       address: shop.address,
-      menu: shop.menu,
       id: shop.id,
     };
     setOpenModal({ isOpen: true, cafeInfo });

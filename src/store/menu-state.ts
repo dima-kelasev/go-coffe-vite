@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { TMenuItem } from './types';
+import type { TMenuItem } from './types';
 
 export const menuState = atom<TMenuItem[]>({
   key: 'menuState',
