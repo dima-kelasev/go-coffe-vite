@@ -3,5 +3,5 @@ export const ENDPOINTS = {
   getPlaces: '/api/places/',
   createMenu: (placeID: number | string) => `/api/places/${placeID}/menus`,
   getMenu: (placeID: number | string) => `/api/places/${placeID}/menus`,
-  purchase: '/api/billing/purchase',
+  purchase: '/billing/purchase',
 };

@@ -1,32 +1,31 @@
-import { Modal, notification, Typography, Button } from 'antd';
+import { Modal, Typography, Button } from 'antd';
 import { useRecoilState } from 'recoil';
 import { modalState } from '../../store/modal-state';
-import { ShoppingCartOutlined } from '@ant-design/icons';
 import {
-  CustomBtn,
-  MenuDescription,
-  MenuItem,
   MenuItemsContainer,
   MenuTitle,
   ModalTittle,
   OrderSummary,
 } from './menu-modal.styeld';
 import { useState } from 'react';
-import CoffeeIcon from '../../assets/img/coffee-icon.png';
 import { ORDER_MODAL } from '../../common/conts/modal-key.const';
 import { useMenu } from '../../hooks/useMenu';
 import type { TMenuItem } from '../../store/types';
+import { MenuCard } from '../Menu-Card/menu-card.component';
+import { useOrder } from '../../hooks/useOrder';
 
 const { Title, Text } = Typography;
 
 export const MenuModal = () => {
   const [modalProps, setModalProps] = useRecoilState(modalState);
-  const { isOpen, cafeInfo } = modalProps;
-  const [api, contextHolder] = notification.useNotification();
+  const [cart, setCart] = useState<TMenuItem[]>([]);
 
+  const { isOpen, cafeInfo } = modalProps;
   const placeID = cafeInfo?.id;
   const { menu } = useMenu(placeID ?? undefined);
-  const [cart, setCart] = useState<TMenuItem[]>([]);
+  const { placeOrder, contextHolder } = useOrder({
+    userId: 1,
+  });
 
   const isInCart = (product: TMenuItem) => {
     return cart.some((item) => item.id === product.id);
@@ -45,27 +44,18 @@ export const MenuModal = () => {
     setCart((prev) => prev.filter((item) => item.id !== product.id));
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (cart.length === 0) return;
 
-    const order = cart.map(({ id, ...rest }) => ({
-      ...rest,
-      cafeName: cafeInfo?.name,
-      cafeId: cafeInfo?.id,
-      productId: id,
-    }));
-
-    console.log('multi-order', order);
-
-    api.success({
-      message: 'Заказ оформлен!',
-      description: `Позиций: ${cart.length}, сумма: ${totalPrice}₽`,
-      placement: 'bottom',
+    const success = await placeOrder(cart, {
+      id: cafeInfo?.id ?? '',
+      name: cafeInfo?.name,
     });
 
-    handleCancel();
+    if (success) {
+      handleCancel();
+    }
   };
-
   const totalPrice = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
   return (
@@ -92,40 +82,15 @@ export const MenuModal = () => {
         </MenuTitle>
 
         <MenuItemsContainer>
-          {menu.map((item) => {
-            const inCart = isInCart(item);
-
-            return (
-              <MenuItem key={item.id}>
-                <img
-                  src={item.imageLink ?? CoffeeIcon}
-                  alt={item.description}
-                  width={50}
-                  height={50}
-                />
-                <MenuDescription>
-                  <Title level={5}>{item.name}</Title>
-                  <Text type="secondary">{`${250} мл`}</Text>
-                </MenuDescription>
-
-                {inCart ? (
-                  <CustomBtn
-                    type="primary"
-                    onClick={() => handleRemoveFromCart(item)}
-                  >
-                    <ShoppingCartOutlined />
-                  </CustomBtn>
-                ) : (
-                  <CustomBtn
-                    type="primary"
-                    onClick={() => handleAddToCart(item)}
-                  >
-                    {`${item.price}₽`}
-                  </CustomBtn>
-                )}
-              </MenuItem>
-            );
-          })}
+          {menu.map((item) => (
+            <MenuCard
+              key={item.id}
+              item={item}
+              inCart={isInCart(item)}
+              onAdd={handleAddToCart}
+              onRemove={handleRemoveFromCart}
+            />
+          ))}
         </MenuItemsContainer>
 
         {cart.length > 0 && (
