@@ -1,8 +1,8 @@
 import { Typography } from 'antd';
-import CoffeeIcon from '../../assets/img/coffee-icon.png';
+import CoffeeIcon from '../../../../assets/img/coffee-icon.png';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import type { TMenuItem } from '../../store/types';
 import { CustomBtn, MenuDescription, MenuItem } from './menu-modal.styeld';
+import type { TMenuItem } from '../../../../store/types';
 
 const { Title, Text } = Typography;
 

@@ -1,20 +1,15 @@
-import { Modal, Typography, Button } from 'antd';
+import { Modal } from 'antd';
 import { useRecoilState } from 'recoil';
 import { modalState } from '../../store/modal-state';
-import {
-  MenuItemsContainer,
-  MenuTitle,
-  ModalTittle,
-  OrderSummary,
-} from './menu-modal.styeld';
+import { MenuItemsContainer } from './menu-modal.styeld';
 import { useState } from 'react';
 import { ORDER_MODAL } from '../../common/conts/modal-key.const';
 import { useMenu } from '../../hooks/useMenu';
 import type { TMenuItem } from '../../store/types';
-import { MenuCard } from '../Menu-Card/menu-card.component';
 import { useOrder } from '../../hooks/useOrder';
-
-const { Title, Text } = Typography;
+import { MenuCard } from './components/Menu-Card/menu-card.component';
+import { ModalHeader } from './components/Modal-Header/modal-header.component';
+import { OrderBlock } from './components/Order-Block/order-block.component';
 
 export const MenuModal = () => {
   const [modalProps, setModalProps] = useRecoilState(modalState);
@@ -68,18 +63,7 @@ export const MenuModal = () => {
         width={700}
         key={ORDER_MODAL}
       >
-        <ModalTittle>
-          <Title level={1} style={{ margin: 0 }}>
-            {cafeInfo?.name}
-          </Title>
-          <Text type="secondary">{`Адрес: ${cafeInfo?.address}`}</Text>
-        </ModalTittle>
-
-        <MenuTitle>
-          <Title level={3} style={{ margin: 0 }}>
-            Меню:
-          </Title>
-        </MenuTitle>
+        <ModalHeader cafeInfo={cafeInfo} />
 
         <MenuItemsContainer>
           {menu.map((item) => (
@@ -94,12 +78,10 @@ export const MenuModal = () => {
         </MenuItemsContainer>
 
         {cart.length > 0 && (
-          <OrderSummary>
-            <Text strong>Итого: {totalPrice}₽</Text>
-            <Button type="primary" onClick={handlePlaceOrder}>
-              Заказать
-            </Button>
-          </OrderSummary>
+          <OrderBlock
+            totalPrice={totalPrice}
+            handlePlaceOrder={handlePlaceOrder}
+          />
         )}
       </Modal>
     </>

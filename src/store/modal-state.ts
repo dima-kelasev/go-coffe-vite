@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-type TCafeInfo = {
+export type TCafeInfo = {
   id: number;
   name: string;
   address: string;
