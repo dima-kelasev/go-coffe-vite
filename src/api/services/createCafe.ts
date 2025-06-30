@@ -1,6 +1,6 @@
 import api from '..';
 import { ENDPOINTS } from '../../const/endpoints';
-import { TCreateCafe } from '../types';
+import type { TCreateCafe } from '../types';
 
 export const createCafe = async (cafeData: TCreateCafe) => {
   try {

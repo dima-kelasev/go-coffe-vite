@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { TMenuData } from '../api/types';
 import { createMenu } from '../api/services/create-menu';
+import type { TMenuData } from '../api/types';
 
 type TRegisterMenu = {
   menuData: TMenuData;

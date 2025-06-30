@@ -1,7 +1,6 @@
 import { useState } from 'react';
-
-import { TCreateCafe } from '../api/types';
 import { createCafe } from '../api/services/createCafe';
+import type { TCreateCafe } from '../api/types';
 
 type TRegisterCafe = {
   cafeData: TCreateCafe;

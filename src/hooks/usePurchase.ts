@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { postPurchase } from '../api/services/purchase';
-import { TPaymentData } from '../api/types';
+import type { TPaymentData } from '../api/types';
 
 type TMakePurchase = {
   paymentData: TPaymentData;
